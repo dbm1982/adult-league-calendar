@@ -6,6 +6,7 @@ import re
 
 URL = "https://southshoreadultsoccer.com/schedule-union-point-weymouth/"
 YOUR_TEAM_KEYWORD = "gray"
+YEAR = 2026  # <-- FIXED YEAR
 
 
 def fetch_html(url):
@@ -57,12 +58,11 @@ def parse_schedule(html):
                     break  # next game or next date
                 j += 1
 
-            # Build datetime
+            # Build datetime with correct year
             if time:
-                dt = datetime.strptime(f"{current_date} {time}", "%m/%d %H:%M")
+                dt = datetime.strptime(f"{YEAR} {current_date} {time}", "%Y %m/%d %H:%M")
             else:
-                # Games without times default to 00:00
-                dt = datetime.strptime(f"{current_date} 00:00", "%m/%d %H:%M")
+                dt = datetime.strptime(f"{YEAR} {current_date} 00:00", "%Y %m/%d %H:%M")
 
             home, away = [t.strip() for t in matchup.split("vs")]
 
