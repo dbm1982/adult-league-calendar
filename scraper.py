@@ -23,59 +23,64 @@ def parse_schedule(html):
     lines = [l for l in lines if l]  # remove empty lines
 
     games = []
-    current_date = None
+    i = 0
 
     date_pattern = re.compile(r"^\d{1,2}/\d{1,2}$")  # e.g., 5/29
 
-    i = 0
     while i < len(lines):
         line = lines[i]
 
-        # Detect date header
+        # Detect a date row
         if date_pattern.match(line):
             current_date = line
-            i += 1
-            continue
 
-        # Detect matchup line: "gray vs purple"
-        if " vs " in line.lower():
-            matchup = line
-            field = None
-            time = None
+            # Next 3 rows are the block
+            matchups = lines[i+1].split("|")
+            fields   = lines[i+2].split("|")
+            times    = lines[i+3].split("|")
+            refs     = lines[i+4].split("|")
 
-            # Next lines contain field, time, ref
-            j = i + 1
-            while j < len(lines):
-                nxt = lines[j].lower()
+            # Clean whitespace
+            matchups = [m.strip() for m in matchups]
+            fields   = [f.strip() for f in fields]
+            times    = [t.strip() for t in times]
+            refs     = [r.strip() for r in refs]
 
-                if nxt.startswith("field"):
-                    field = lines[j]
-                elif re.match(r"^\d{1,2}:\d{2}$", nxt):  # time like 8:15
-                    time = lines[j]
-                elif nxt.startswith("ref"):
-                    pass  # ignore referee
-                elif " vs " in nxt or date_pattern.match(nxt):
-                    break  # next game or next date
-                j += 1
+            # Column 0 is the date/day-of-week → skip it
+            for col in range(1, len(matchups)):
+                matchup = matchups[col]
+                field   = fields[col] if col < len(fields) else None
+                time    = times[col] if col < len(times) else None
 
-            # Build datetime with correct year
-            if time:
-                dt = datetime.strptime(f"{YEAR} {current_date} {time}", "%Y %m/%d %H:%M")
-            else:
-                dt = datetime.strptime(f"{YEAR} {current_date} 00:00", "%Y %m/%d %H:%M")
+                # Skip empty matchup columns
+                if "vs" not in matchup.lower():
+                    continue
 
-            home, away = [t.strip() for t in matchup.split("vs")]
+                # Parse teams
+                home, away = [t.strip() for t in matchup.split("vs")]
 
-            games.append({
-                "date": current_date,
-                "time": time,
-                "datetime": dt,
-                "field": field,
-                "home": home,
-                "away": away
-            })
+                # Build datetime
+                if time:
+                    # Always PM unless explicitly AM
+                    if "am" in time.lower():
+                        dt = datetime.strptime(f"{YEAR} {current_date} {time}", "%Y %m/%d %I:%M %p")
+                    else:
+                        dt = datetime.strptime(f"{YEAR} {current_date} {time} PM", "%Y %m/%d %I:%M %p")
+                else:
+                    # No time → default to 00:00
+                    dt = datetime.strptime(f"{YEAR} {current_date} 00:00", "%Y %m/%d %H:%M")
 
-            i = j
+                games.append({
+                    "date": current_date,
+                    "time": time,
+                    "datetime": dt,
+                    "field": field,
+                    "home": home,
+                    "away": away
+                })
+
+            # Move to next block (skip 5 rows)
+            i += 5
             continue
 
         i += 1
