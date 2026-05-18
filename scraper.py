@@ -2,10 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 from ics import Calendar, Event
 from datetime import datetime
-import json
+import re
 
 URL = "https://southshoreadultsoccer.com/schedule-union-point-weymouth/"
-YOUR_TEAM_KEYWORD = "gray"   # case-insensitive match
+YOUR_TEAM_KEYWORD = "gray"
 
 
 def fetch_html(url):
@@ -16,37 +16,71 @@ def fetch_html(url):
 
 def parse_schedule(html):
     soup = BeautifulSoup(html, "html.parser")
-    tables = soup.find_all("table")
+
+    # Extract all text lines, cleaned
+    lines = [l.strip() for l in soup.get_text("\n").split("\n")]
+    lines = [l for l in lines if l]  # remove empty lines
 
     games = []
-    teams = set()
+    current_date = None
 
-    for table in tables:
-        rows = table.find_all("tr")
-        for row in rows[1:]:
-            cols = [c.get_text(strip=True) for c in row.find_all(["td", "th"])]
-            if len(cols) < 5:
-                continue
+    date_pattern = re.compile(r"^\d{1,2}/\d{1,2}$")  # e.g., 5/29
 
-            date_str, time_str, field, home, away = cols[:5]
-            teams.add(home)
-            teams.add(away)
+    i = 0
+    while i < len(lines):
+        line = lines[i]
 
-            try:
-                dt = datetime.strptime(f"{date_str} {time_str}", "%m/%d/%Y %I:%M %p")
-            except ValueError:
-                continue
+        # Detect date header
+        if date_pattern.match(line):
+            current_date = line
+            i += 1
+            continue
+
+        # Detect matchup line: "gray vs purple"
+        if " vs " in line.lower():
+            matchup = line
+            field = None
+            time = None
+
+            # Next lines contain field, time, ref
+            j = i + 1
+            while j < len(lines):
+                nxt = lines[j].lower()
+
+                if nxt.startswith("field"):
+                    field = lines[j]
+                elif re.match(r"^\d{1,2}:\d{2}$", nxt):  # time like 8:15
+                    time = lines[j]
+                elif nxt.startswith("ref"):
+                    pass  # ignore referee
+                elif " vs " in nxt or date_pattern.match(nxt):
+                    break  # next game or next date
+                j += 1
+
+            # Build datetime
+            if time:
+                dt = datetime.strptime(f"{current_date} {time}", "%m/%d %H:%M")
+            else:
+                # Games without times default to 00:00
+                dt = datetime.strptime(f"{current_date} 00:00", "%m/%d %H:%M")
+
+            home, away = [t.strip() for t in matchup.split("vs")]
 
             games.append({
-                "date": date_str,
-                "time": time_str,
+                "date": current_date,
+                "time": time,
                 "datetime": dt,
                 "field": field,
                 "home": home,
                 "away": away
             })
 
-    return games, sorted(list(teams))
+            i = j
+            continue
+
+        i += 1
+
+    return games
 
 
 def filter_for_team(games, keyword):
@@ -64,12 +98,8 @@ def create_ics(games, filename):
         event = Event()
         event.name = f"{g['home']} vs {g['away']}"
         event.begin = g["datetime"]
-        event.location = g["field"]
-        event.description = (
-            f"South Shore Adult Soccer League\n"
-            f"Field: {g['field']}\n"
-            f"Matchup: {g['home']} vs {g['away']}"
-        )
+        event.location = g["field"] or "TBD"
+        event.description = f"Field: {g['field']}\nMatchup: {g['home']} vs {g['away']}"
         cal.events.add(event)
 
     with open(filename, "w") as f:
@@ -78,16 +108,11 @@ def create_ics(games, filename):
 
 def main():
     html = fetch_html(URL)
-    games, teams = parse_schedule(html)
-
-    with open("teams.json", "w") as f:
-        json.dump(teams, f, indent=2)
-
+    games = parse_schedule(html)
     my_games = filter_for_team(games, YOUR_TEAM_KEYWORD)
-    create_ics(my_games, filename="gray_team_schedule.ics")
-
-    return 0
+    create_ics(my_games, "gray_team_schedule.ics")
+    print(f"Found {len(my_games)} Gray games.")
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()
