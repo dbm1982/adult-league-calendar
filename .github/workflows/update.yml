@@ -1,0 +1,34 @@
+name: Update Gray Team Schedule
+
+on:
+  schedule:
+    - cron: "0 10 * * *"   # 6 AM EDT
+    - cron: "0 22 * * *"   # 6 PM EDT
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scraper
+        run: python scraper.py
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add gray_team_schedule.ics teams.json
+          git commit -m "Auto-update Gray team schedule" || echo "No changes"
+          git push
