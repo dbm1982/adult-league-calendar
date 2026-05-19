@@ -1,12 +1,21 @@
 import requests
 from bs4 import BeautifulSoup
 from ics import Calendar, Event
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
+import pytz
 
 URL = "https://southshoreadultsoccer.com/schedule-union-point-weymouth/"
 YOUR_TEAM_KEYWORD = "gray"
-YEAR = 2026  # season year
+YEAR = 2026
+
+# For correct local times
+TZ = pytz.timezone("America/New_York")
+
+WEEKDAYS = {
+    "monday","tuesday","wednesday","thursday",
+    "friday","saturday","sunday"
+}
 
 
 def fetch_html(url):
@@ -38,74 +47,72 @@ def parse_schedule(html):
 
             # 1) Collect matchups (lines with "vs")
             matchups = []
-            while i < len(lines) and " vs " in lines[i].lower():
+            while i < len(lines) and "vs" in lines[i].lower():
                 matchups.append(lines[i])
                 i += 1
 
-            if not matchups:
+            num_games = len(matchups)
+            if num_games == 0:
                 continue
 
-            num_games = len(matchups)
+            # 2) Skip day-of-week lines
+            while i < len(lines) and lines[i].lower() in WEEKDAYS:
+                i += 1
 
-            # 2) Collect fields (lines starting with "field")
+            # 3) Collect fields
             fields = []
             while i < len(lines) and lines[i].lower().startswith("field"):
                 fields.append(lines[i])
                 i += 1
 
-            # 3) Collect times (lines matching time pattern)
+            # 4) Collect times
             times = []
             while i < len(lines) and time_pattern.match(lines[i]):
                 times.append(lines[i])
                 i += 1
 
-            # 4) Collect refs (lines starting with "ref")
+            # 5) Collect refs
             refs = []
             while i < len(lines) and lines[i].lower().startswith("ref"):
                 refs.append(lines[i])
                 i += 1
 
-            # Build games per column
+            # Build games per index
             for idx in range(num_games):
                 matchup = matchups[idx]
                 field = fields[idx] if idx < len(fields) else None
                 time = times[idx] if idx < len(times) else None
+                ref = refs[idx] if idx < len(refs) else None
 
                 # Parse teams
-                if "vs" not in matchup.lower():
-                    continue
                 home, away = [t.strip() for t in matchup.split("vs", 1)]
 
-                # Build datetime
+                # Build datetime (all PM)
                 if time:
-                    # Assume PM unless explicitly AM
-                    if "am" in time.lower():
-                        dt = datetime.strptime(
-                            f"{YEAR} {current_date} {time}",
-                            "%Y %m/%d %I:%M %p"
-                        )
-                    else:
-                        dt = datetime.strptime(
-                            f"{YEAR} {current_date} {time} PM",
-                            "%Y %m/%d %I:%M %p"
-                        )
+                    dt = datetime.strptime(
+                        f"{YEAR} {current_date} {time} PM",
+                        "%Y %m/%d %I:%M %p"
+                    )
                 else:
-                    # No time → default to midnight
+                    # Missing time → midnight placeholder
                     dt = datetime.strptime(
                         f"{YEAR} {current_date} 00:00",
                         "%Y %m/%d %H:%M"
                     )
+
+                # Localize to America/New_York
+                dt = TZ.localize(dt)
 
                 games.append({
                     "date": current_date,
                     "time": time,
                     "datetime": dt,
                     "field": field,
+                    "ref": ref,
                     "home": home,
                     "away": away
                 })
 
-            # continue scanning from current i
             continue
 
         i += 1
@@ -126,13 +133,29 @@ def create_ics(games, filename):
 
     for g in games:
         event = Event()
-        event.name = f"{g['home']} vs {g['away']}"
+
+        # Capitalized title
+        title = f"{g['home'].title()} vs {g['away'].title()}"
+        event.name = title
+
+        # Start time (already localized)
         event.begin = g["datetime"]
-        event.location = g["field"] or "TBD"
+
+        # 90-minute duration
+        event.end = g["datetime"] + timedelta(minutes=90)
+
+        # Location
+        event.location = g["field"].title() if g["field"] else "TBD"
+
+        # Notes
+        ref_clean = g["ref"].replace("ref –", "").strip().title() if g["ref"] else "TBD"
+        field_clean = g["field"].title() if g["field"] else "TBD"
+
         event.description = (
-            f"Field: {g['field']}\n"
-            f"Matchup: {g['home']} vs {g['away']}"
+            f"Field: {field_clean}\n"
+            f"Referee: {ref_clean}"
         )
+
         cal.events.add(event)
 
     with open(filename, "w") as f:
