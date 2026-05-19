@@ -131,8 +131,10 @@ def create_ics(games, filename):
         event.begin = g["datetime"]
         event.end = g["datetime"] + timedelta(minutes=90)
 
-        event.location = g["field"].title() if g["field"] else "TBD"
+        # FIXED: Always use the full address as the location
+        event.location = "170 Memorial Grove Ave, Weymouth, MA 02190"
 
+        # Notes now include the field number instead of location
         ref_clean = g["ref"].replace("ref –", "").strip().title() if g["ref"] else "TBD"
         field_clean = g["field"].title() if g["field"] else "TBD"
 
@@ -145,6 +147,7 @@ def create_ics(games, filename):
 
     with open(filename, "w") as f:
         f.writelines(cal)
+
 
 def main():
     html = fetch_html(URL)
