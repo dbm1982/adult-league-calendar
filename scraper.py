@@ -134,9 +134,11 @@ def create_ics(games, filename):
     for g in games:
         event = Event()
 
-        # Capitalized title
+        # Capitalized matchup
         title = f"{g['home'].title()} vs {g['away'].title()}"
-        event.name = title
+
+        # Full descriptive title
+        event.name = f"Adult Soccer Game: {title}"
 
         # Start time (already localized)
         event.begin = g["datetime"]
