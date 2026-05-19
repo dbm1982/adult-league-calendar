@@ -1,15 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
 from ics import Calendar, Event
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import re
+from zoneinfo import ZoneInfo
 
 URL = "https://southshoreadultsoccer.com/schedule-union-point-weymouth/"
 YOUR_TEAM_KEYWORD = "gray"
 YEAR = 2026
 
-# EDT for the entire season (May–Aug)
-ET = timezone(timedelta(hours=-4))
+# Real America/New_York timezone (correct fix)
+ET = ZoneInfo("America/New_York")
 
 WEEKDAYS = {
     "monday","tuesday","wednesday","thursday",
@@ -91,7 +92,7 @@ def parse_schedule(html):
                         "%Y %m/%d %H:%M"
                     )
 
-                # Attach EDT timezone
+                # Attach REAL America/New_York timezone
                 dt = dt.replace(tzinfo=ET)
 
                 games.append({
@@ -126,7 +127,7 @@ def create_ics(games, filename):
         title = f"{g['home'].title()} vs {g['away'].title()}"
         event.name = f"Adult Soccer Game: {title}"
 
-        # Use timezone-aware datetimes
+        # Use timezone-aware datetimes (zoneinfo)
         event.begin = g["datetime"]
         event.end = g["datetime"] + timedelta(minutes=90)
 
