@@ -139,11 +139,15 @@ def create_ics(games, filename):
         # Full descriptive title
         event.name = f"Adult Soccer Game: {title}"
 
-        # Start time (already localized)
-        event.begin = g["datetime"]
+        # Format local time explicitly with timezone name
+        start_str = g["datetime"].strftime("%Y-%m-%d %H:%M:%S")
+        event.begin = f"{start_str} America/New_York"
+        
+        # End time (90 minutes later)
+        end_dt = g["datetime"] + timedelta(minutes=90)
+        end_str = end_dt.strftime("%Y-%m-%d %H:%M:%S")
+        event.end = f"{end_str} America/New_York"
 
-        # 90-minute duration
-        event.end = g["datetime"] + timedelta(minutes=90)
 
         # Location
         event.location = g["field"].title() if g["field"] else "TBD"
