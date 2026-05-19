@@ -101,7 +101,6 @@ def parse_schedule(html):
                     )
 
                 # Localize to America/New_York
-                dt = TZ.localize(dt)
 
                 games.append({
                     "date": current_date,
