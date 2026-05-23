@@ -149,6 +149,63 @@ def create_ics(games, filename):
         f.writelines(cal)
 
 
+
+def build_team_game_rows(games):
+    """
+    Sorts games chronologically, assigns game_id in true date order,
+    and expands each game into two rows (one per team).
+    """
+
+    # Sort by datetime
+    games_sorted = sorted(games, key=lambda g: g["datetime"])
+
+    rows = []
+    game_counter = 1
+
+    for g in games_sorted:
+        game_id = f"G{game_counter}"
+
+        date_str = g["datetime"].strftime("%Y-%m-%d")
+        time_str = g["datetime"].strftime("%I:%M %p")
+        field_clean = g["field"].title() if g["field"] else "TBD"
+
+        # Home team row
+        rows.append({
+            "game_id": game_id,
+            "team_id": g["home"].title(),
+            "date": date_str,
+            "time": time_str,
+            "opponent": g["away"].title(),
+            "field": field_clean
+        })
+
+        # Away team row
+        rows.append({
+            "game_id": game_id,
+            "team_id": g["away"].title(),
+            "date": date_str,
+            "time": time_str,
+            "opponent": g["home"].title(),
+            "field": field_clean
+        })
+
+        game_counter += 1
+
+    return rows
+
+
+
+def write_team_games_file(rows, filename="all_team_games.tsv"):
+    with open(filename, "w") as f:
+        f.write("game_id\tteam_id\tdate\ttime\topponent\tfield\n")
+        for r in rows:
+            f.write(
+                f"{r['game_id']}\t{r['team_id']}\t{r['date']}\t"
+                f"{r['time']}\t{r['opponent']}\t{r['field']}\n"
+            )
+
+
+
 def extract_all_team_keywords(games):
     """
     Returns a sorted list of unique team keywords (colors).
@@ -191,6 +248,12 @@ def main():
         json.dump(all_keywords, f, indent=2)
 
     print("All team schedules generated.")
+    
+        # Build the full team-centric schedule file
+    team_rows = build_team_game_rows(games)
+    write_team_games_file(team_rows)
+    print(f"Wrote {len(team_rows)} team-game rows to all_team_games.tsv")
+
 
 
 if __name__ == "__main__":
