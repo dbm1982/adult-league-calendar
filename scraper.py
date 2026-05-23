@@ -149,12 +149,50 @@ def create_ics(games, filename):
         f.writelines(cal)
 
 
+def extract_all_team_keywords(games):
+    """
+    Returns a sorted list of unique team keywords (colors).
+    Example: ['gray', 'purple', 'navy', 'yellow']
+    """
+    keywords = set()
+
+    for g in games:
+        for side in (g["home"], g["away"]):
+            parts = side.lower().split()
+            for p in parts:
+                if p.isalpha():   # keep simple words only
+                    keywords.add(p)
+
+    return sorted(keywords)
+
+
 def main():
     html = fetch_html(URL)
     games = parse_schedule(html)
-    my_games = filter_for_team(games, YOUR_TEAM_KEYWORD)
-    create_ics(my_games, "gray_team_schedule.ics")
-    print(f"Found {len(my_games)} Gray games.")
+
+    # Identify all team keywords (colors)
+    all_keywords = extract_all_team_keywords(games)
+    print("Detected team keywords:", all_keywords)
+
+    # Build ICS for each team
+    for keyword in all_keywords:
+        team_games = filter_for_team(games, keyword)
+
+        if not team_games:
+            continue
+
+        filename = f"team_{keyword}.ics"
+        create_ics(team_games, filename)
+        print(f"Created {filename} with {len(team_games)} games.")
+
+    # Also produce teams.json for reference
+    import json
+    with open("teams.json", "w") as f:
+        json.dump(all_keywords, f, indent=2)
+
+    print("All team schedules generated.")
+
 
 if __name__ == "__main__":
     main()
+
