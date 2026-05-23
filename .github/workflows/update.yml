@@ -31,6 +31,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add gray_team_schedule.ics teams.json
-          git commit -m "Auto-update Gray team schedule" || echo "No changes"
+          git add *.ics teams.json
+          git commit -m "Auto-update all team schedules" || echo "No changes"
           git push
+
