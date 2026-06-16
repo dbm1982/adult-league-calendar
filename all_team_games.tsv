@@ -1,157 +1,157 @@
 game_id	team_id	date	time	opponent	field
-G1	Red	2026-05-29	08:15 PM	White	Field 2
-G1	White	2026-05-29	08:15 PM	Red	Field 2
-G2	Orange	2026-05-29	08:15 PM	Beige	Field 3
-G2	Beige	2026-05-29	08:15 PM	Orange	Field 3
-G3	Green	2026-05-29	10:00 PM	Black	Field 2
-G3	Black	2026-05-29	10:00 PM	Green	Field 2
-G4	Gray	2026-05-29	10:00 PM	Purple	Field 3
-G4	Purple	2026-05-29	10:00 PM	Gray	Field 3
+G1	Red	2026-05-29	12:00 AM	White	TBD
+G1	White	2026-05-29	12:00 AM	Red	TBD
+G2	Orange	2026-05-29	12:00 AM	Beige	TBD
+G2	Beige	2026-05-29	12:00 AM	Orange	TBD
+G3	Green	2026-05-29	12:00 AM	Black	TBD
+G3	Black	2026-05-29	12:00 AM	Green	TBD
+G4	Gray	2026-05-29	12:00 AM	Purple	TBD
+G4	Purple	2026-05-29	12:00 AM	Gray	TBD
 G5	Royal	2026-05-30	12:00 AM	Yellow	Field 3
 G5	Yellow	2026-05-30	12:00 AM	Royal	Field 3
 G6	Powder	2026-05-30	12:00 AM	Pink	Field 3
 G6	Pink	2026-05-30	12:00 AM	Powder	Field 3
-G7	Gray	2026-06-05	08:15 PM	Royal	Field 1
-G7	Royal	2026-06-05	08:15 PM	Gray	Field 1
-G8	Pink	2026-06-05	08:15 PM	Black	Field 2
-G8	Black	2026-06-05	08:15 PM	Pink	Field 2
-G9	Orange	2026-06-05	10:00 PM	Yellow	Field 1
-G9	Yellow	2026-06-05	10:00 PM	Orange	Field 1
-G10	White	2026-06-05	10:00 PM	Powder	Field 2
-G10	Powder	2026-06-05	10:00 PM	White	Field 2
+G7	Gray	2026-06-05	12:00 AM	Royal	TBD
+G7	Royal	2026-06-05	12:00 AM	Gray	TBD
+G8	Pink	2026-06-05	12:00 AM	Black	TBD
+G8	Black	2026-06-05	12:00 AM	Pink	TBD
+G9	Orange	2026-06-05	12:00 AM	Yellow	TBD
+G9	Yellow	2026-06-05	12:00 AM	Orange	TBD
+G10	White	2026-06-05	12:00 AM	Powder	TBD
+G10	Powder	2026-06-05	12:00 AM	White	TBD
 G11	Purple	2026-06-06	12:00 AM	Red	Field 2
 G11	Red	2026-06-06	12:00 AM	Purple	Field 2
 G12	Green	2026-06-06	12:00 AM	Beige	Field 2
 G12	Beige	2026-06-06	12:00 AM	Green	Field 2
-G13	Royal	2026-06-12	07:30 PM	Green	Field 3
-G13	Green	2026-06-12	07:30 PM	Royal	Field 3
-G14	Yellow	2026-06-12	09:15 PM	Purple	Field 2
-G14	Purple	2026-06-12	09:15 PM	Yellow	Field 2
-G15	Powder	2026-06-12	09:15 PM	Beige	Field 3
-G15	Beige	2026-06-12	09:15 PM	Powder	Field 3
-G16	Pink	2026-06-12	09:15 PM	Red	Field 4
-G16	Red	2026-06-12	09:15 PM	Pink	Field 4
+G13	Royal	2026-06-12	12:00 AM	Green	TBD
+G13	Green	2026-06-12	12:00 AM	Royal	TBD
+G14	Yellow	2026-06-12	12:00 AM	Purple	TBD
+G14	Purple	2026-06-12	12:00 AM	Yellow	TBD
+G15	Powder	2026-06-12	12:00 AM	Beige	TBD
+G15	Beige	2026-06-12	12:00 AM	Powder	TBD
+G16	Pink	2026-06-12	12:00 AM	Red	TBD
+G16	Red	2026-06-12	12:00 AM	Pink	TBD
 G17	White	2026-06-13	12:00 AM	Orange	Field 2
 G17	Orange	2026-06-13	12:00 AM	White	Field 2
 G18	Gray	2026-06-13	12:00 AM	Black	Field 2
 G18	Black	2026-06-13	12:00 AM	Gray	Field 2
-G19	Green	2026-06-19	06:30 PM	Orange	Field 2
-G19	Orange	2026-06-19	06:30 PM	Green	Field 2
-G20	Yellow	2026-06-19	06:30 PM	Gray	Field 3
-G20	Gray	2026-06-19	06:30 PM	Yellow	Field 3
-G21	Powder	2026-06-19	08:15 PM	Royal	Field 2
-G21	Royal	2026-06-19	08:15 PM	Powder	Field 2
-G22	Red	2026-06-19	08:15 PM	Beige	Field 3
-G22	Beige	2026-06-19	08:15 PM	Red	Field 3
-G23	Purple	2026-06-19	10:00 PM	Pink	Field 2
-G23	Pink	2026-06-19	10:00 PM	Purple	Field 2
-G24	Black	2026-06-19	10:00 PM	White	Field 3
-G24	White	2026-06-19	10:00 PM	Black	Field 3
-G25	Black	2026-06-26	06:30 PM	Powder	Field 2
-G25	Powder	2026-06-26	06:30 PM	Black	Field 2
-G26	Purple	2026-06-26	06:30 PM	Beige	Field 3
-G26	Beige	2026-06-26	06:30 PM	Purple	Field 3
-G27	Royal	2026-06-26	08:15 PM	Pink	Field 2
-G27	Pink	2026-06-26	08:15 PM	Royal	Field 2
-G28	Yellow	2026-06-26	08:15 PM	. Green	Field 3
-G28	. Green	2026-06-26	08:15 PM	Yellow	Field 3
-G29	White	2026-06-26	10:00 PM	Gray	Field 2
-G29	Gray	2026-06-26	10:00 PM	White	Field 2
-G30	Red	2026-06-26	10:00 PM	Orange	Field 3
-G30	Orange	2026-06-26	10:00 PM	Red	Field 3
-G31	Royal	2026-07-10	06:30 PM	Pink	Field 3
-G31	Pink	2026-07-10	06:30 PM	Royal	Field 3
-G32	Powder	2026-07-10	06:30 PM	Orange	Field 4
-G32	Orange	2026-07-10	06:30 PM	Powder	Field 4
-G33	White	2026-07-10	08:15 PM	Yellow	Field 3
-G33	Yellow	2026-07-10	08:15 PM	White	Field 3
-G34	Purple	2026-07-10	08:15 PM	Black	Field 4
-G34	Black	2026-07-10	08:15 PM	Purple	Field 4
-G35	Beige	2026-07-10	10:00 PM	Gray	Field 3
-G35	Gray	2026-07-10	10:00 PM	Beige	Field 3
-G36	Red	2026-07-10	10:00 PM	Green	Field 4
-G36	Green	2026-07-10	10:00 PM	Red	Field 4
-G37	Royal	2026-07-17	06:30 PM	Red	Field 3
-G37	Red	2026-07-17	06:30 PM	Royal	Field 3
-G38	Purple	2026-07-17	06:30 PM	Green	Field 4
-G38	Green	2026-07-17	06:30 PM	Purple	Field 4
-G39	Yellow	2026-07-17	08:15 PM	Beige	Field 3
-G39	Beige	2026-07-17	08:15 PM	Yellow	Field 3
-G40	Gray	2026-07-17	08:15 PM	Powder	Field 4
-G40	Powder	2026-07-17	08:15 PM	Gray	Field 4
-G41	Pink	2026-07-17	10:00 PM	White	Field 3
-G41	White	2026-07-17	10:00 PM	Pink	Field 3
-G42	Orange	2026-07-17	10:00 PM	Black	Field 4
-G42	Black	2026-07-17	10:00 PM	Orange	Field 4
-G43	Black	2026-07-24	06:30 PM	Beige	Field 3
-G43	Beige	2026-07-24	06:30 PM	Black	Field 3
-G44	Gray	2026-07-24	06:30 PM	Pink	Field 4
-G44	Pink	2026-07-24	06:30 PM	Gray	Field 4
-G45	Purple	2026-07-24	08:15 PM	Red	Field 3
-G45	Red	2026-07-24	08:15 PM	Purple	Field 3
-G46	Royal	2026-07-24	08:15 PM	White	Field 4
-G46	White	2026-07-24	08:15 PM	Royal	Field 4
-G47	Powder	2026-07-24	10:00 PM	Yellow	Field 3
-G47	Yellow	2026-07-24	10:00 PM	Powder	Field 3
-G48	Orange	2026-07-24	10:00 PM	Green	Field 4
-G48	Green	2026-07-24	10:00 PM	Orange	Field 4
-G49	Orange	2026-07-31	06:30 PM	White	Field 3
-G49	White	2026-07-31	06:30 PM	Orange	Field 3
-G50	Pink	2026-07-31	06:30 PM	Yellow	Field 4
-G50	Yellow	2026-07-31	06:30 PM	Pink	Field 4
-G51	Green	2026-07-31	08:15 PM	Powder	Field 3
-G51	Powder	2026-07-31	08:15 PM	Green	Field 3
-G52	Gray	2026-07-31	08:15 PM	Red	Field 4
-G52	Red	2026-07-31	08:15 PM	Gray	Field 4
-G53	Royal	2026-07-31	10:00 PM	Purple	Field 3
-G53	Purple	2026-07-31	10:00 PM	Royal	Field 3
-G54	Black	2026-07-31	10:00 PM	Beige	Field 4
-G54	Beige	2026-07-31	10:00 PM	Black	Field 4
-G55	Yellow	2026-08-07	06:30 PM	Red	Field 3
-G55	Red	2026-08-07	06:30 PM	Yellow	Field 3
-G56	Powder	2026-08-07	06:30 PM	Beige	Field 4
-G56	Beige	2026-08-07	06:30 PM	Powder	Field 4
-G57	Royal	2026-08-07	08:15 PM	Black	Field 3
-G57	Black	2026-08-07	08:15 PM	Royal	Field 3
-G58	Pink	2026-08-07	08:15 PM	Purple	Field 4
-G58	Purple	2026-08-07	08:15 PM	Pink	Field 4
-G59	Orange	2026-08-07	10:00 PM	Gray	Field 3
-G59	Gray	2026-08-07	10:00 PM	Orange	Field 3
-G60	Green	2026-08-07	10:00 PM	White	Field 4
-G60	White	2026-08-07	10:00 PM	Green	Field 4
-G61	Beige	2026-08-14	06:30 PM	White	Field 3
-G61	White	2026-08-14	06:30 PM	Beige	Field 3
-G62	Red	2026-08-14	06:30 PM	Powder	Field 4
-G62	Powder	2026-08-14	06:30 PM	Red	Field 4
-G63	Black	2026-08-14	08:15 PM	Yellow	Field 3
-G63	Yellow	2026-08-14	08:15 PM	Black	Field 3
-G64	Pink	2026-08-14	08:15 PM	Green	Field 4
-G64	Green	2026-08-14	08:15 PM	Pink	Field 4
-G65	Purple	2026-08-14	10:00 PM	Orange	Field 3
-G65	Orange	2026-08-14	10:00 PM	Purple	Field 3
-G66	Gray	2026-08-14	10:00 PM	Royal	Field 4
-G66	Royal	2026-08-14	10:00 PM	Gray	Field 4
-G67	White	2026-08-21	06:30 PM	Purple	Field 3
-G67	Purple	2026-08-21	06:30 PM	White	Field 3
-G68	Green	2026-08-21	06:30 PM	Gray	Field 4
-G68	Gray	2026-08-21	06:30 PM	Green	Field 4
-G69	Orange	2026-08-21	08:15 PM	Royal	Field 3
-G69	Royal	2026-08-21	08:15 PM	Orange	Field 3
-G70	Black	2026-08-21	08:15 PM	Red	Field 4
-G70	Red	2026-08-21	08:15 PM	Black	Field 4
-G71	Yellow	2026-08-21	10:00 PM	Pink	Field 3
-G71	Pink	2026-08-21	10:00 PM	Yellow	Field 3
-G72	Beige	2026-08-21	10:00 PM	Powder	Field 4
-G72	Powder	2026-08-21	10:00 PM	Beige	Field 4
-G73	Black	2026-08-28	06:30 PM	Orange	Field 2
-G73	Orange	2026-08-28	06:30 PM	Black	Field 2
-G74	Beige	2026-08-28	06:30 PM	Royal	Field 3
-G74	Royal	2026-08-28	06:30 PM	Beige	Field 3
-G75	Powder	2026-08-28	08:15 PM	Purple	Field 2
-G75	Purple	2026-08-28	08:15 PM	Powder	Field 2
-G76	Gray	2026-08-28	08:15 PM	Green	Field 3
-G76	Green	2026-08-28	08:15 PM	Gray	Field 3
-G77	White	2026-08-28	10:00 PM	Yellow	Field 2
-G77	Yellow	2026-08-28	10:00 PM	White	Field 2
-G78	Pink	2026-08-28	10:00 PM	Red	Field 3
-G78	Red	2026-08-28	10:00 PM	Pink	Field 3
+G19	Green	2026-06-19	12:00 AM	Orange	TBD
+G19	Orange	2026-06-19	12:00 AM	Green	TBD
+G20	Yellow	2026-06-19	12:00 AM	Gray	TBD
+G20	Gray	2026-06-19	12:00 AM	Yellow	TBD
+G21	Powder	2026-06-19	12:00 AM	Royal	TBD
+G21	Royal	2026-06-19	12:00 AM	Powder	TBD
+G22	Red	2026-06-19	12:00 AM	Beige	TBD
+G22	Beige	2026-06-19	12:00 AM	Red	TBD
+G23	Purple	2026-06-19	12:00 AM	Pink	TBD
+G23	Pink	2026-06-19	12:00 AM	Purple	TBD
+G24	Black	2026-06-19	12:00 AM	White	TBD
+G24	White	2026-06-19	12:00 AM	Black	TBD
+G25	Black	2026-06-26	12:00 AM	Powder	TBD
+G25	Powder	2026-06-26	12:00 AM	Black	TBD
+G26	Purple	2026-06-26	12:00 AM	Beige	TBD
+G26	Beige	2026-06-26	12:00 AM	Purple	TBD
+G27	Royal	2026-06-26	12:00 AM	Pink	TBD
+G27	Pink	2026-06-26	12:00 AM	Royal	TBD
+G28	Yellow	2026-06-26	12:00 AM	Green	TBD
+G28	Green	2026-06-26	12:00 AM	Yellow	TBD
+G29	White	2026-06-26	12:00 AM	Gray	TBD
+G29	Gray	2026-06-26	12:00 AM	White	TBD
+G30	Red	2026-06-26	12:00 AM	Orange	TBD
+G30	Orange	2026-06-26	12:00 AM	Red	TBD
+G31	Royal	2026-07-10	12:00 AM	Beige	TBD
+G31	Beige	2026-07-10	12:00 AM	Royal	TBD
+G32	Powder	2026-07-10	12:00 AM	Orange	TBD
+G32	Orange	2026-07-10	12:00 AM	Powder	TBD
+G33	White	2026-07-10	12:00 AM	Yellow	TBD
+G33	Yellow	2026-07-10	12:00 AM	White	TBD
+G34	Purple	2026-07-10	12:00 AM	Black	TBD
+G34	Black	2026-07-10	12:00 AM	Purple	TBD
+G35	Pink	2026-07-10	12:00 AM	Gray	TBD
+G35	Gray	2026-07-10	12:00 AM	Pink	TBD
+G36	Red	2026-07-10	12:00 AM	Green	TBD
+G36	Green	2026-07-10	12:00 AM	Red	TBD
+G37	Royal	2026-07-17	12:00 AM	Red	TBD
+G37	Red	2026-07-17	12:00 AM	Royal	TBD
+G38	Purple	2026-07-17	12:00 AM	Green	TBD
+G38	Green	2026-07-17	12:00 AM	Purple	TBD
+G39	Yellow	2026-07-17	12:00 AM	Beige	TBD
+G39	Beige	2026-07-17	12:00 AM	Yellow	TBD
+G40	Gray	2026-07-17	12:00 AM	Powder	TBD
+G40	Powder	2026-07-17	12:00 AM	Gray	TBD
+G41	Pink	2026-07-17	12:00 AM	White	TBD
+G41	White	2026-07-17	12:00 AM	Pink	TBD
+G42	Orange	2026-07-17	12:00 AM	Black	TBD
+G42	Black	2026-07-17	12:00 AM	Orange	TBD
+G43	Black	2026-07-24	12:00 AM	Beige	TBD
+G43	Beige	2026-07-24	12:00 AM	Black	TBD
+G44	Orange	2026-07-24	12:00 AM	Purple	TBD
+G44	Purple	2026-07-24	12:00 AM	Orange	TBD
+G45	Pink	2026-07-24	12:00 AM	Green	TBD
+G45	Green	2026-07-24	12:00 AM	Pink	TBD
+G46	Royal	2026-07-24	12:00 AM	White	TBD
+G46	White	2026-07-24	12:00 AM	Royal	TBD
+G47	Powder	2026-07-24	12:00 AM	Yellow	TBD
+G47	Yellow	2026-07-24	12:00 AM	Powder	TBD
+G48	Gray	2026-07-24	12:00 AM	Red	TBD
+G48	Red	2026-07-24	12:00 AM	Gray	TBD
+G49	Orange	2026-07-31	12:00 AM	White	TBD
+G49	White	2026-07-31	12:00 AM	Orange	TBD
+G50	Pink	2026-07-31	12:00 AM	Yellow	TBD
+G50	Yellow	2026-07-31	12:00 AM	Pink	TBD
+G51	Green	2026-07-31	12:00 AM	Powder	TBD
+G51	Powder	2026-07-31	12:00 AM	Green	TBD
+G52	Black	2026-07-31	12:00 AM	Red	TBD
+G52	Red	2026-07-31	12:00 AM	Black	TBD
+G53	Royal	2026-07-31	12:00 AM	Purple	TBD
+G53	Purple	2026-07-31	12:00 AM	Royal	TBD
+G54	Gray	2026-07-31	12:00 AM	Beige	TBD
+G54	Beige	2026-07-31	12:00 AM	Gray	TBD
+G55	Yellow	2026-08-07	12:00 AM	Red	TBD
+G55	Red	2026-08-07	12:00 AM	Yellow	TBD
+G56	Powder	2026-08-07	12:00 AM	Purple	TBD
+G56	Purple	2026-08-07	12:00 AM	Powder	TBD
+G57	Royal	2026-08-07	12:00 AM	Black	TBD
+G57	Black	2026-08-07	12:00 AM	Royal	TBD
+G58	Pink	2026-08-07	12:00 AM	Beige	TBD
+G58	Beige	2026-08-07	12:00 AM	Pink	TBD
+G59	Orange	2026-08-07	12:00 AM	Gray	TBD
+G59	Gray	2026-08-07	12:00 AM	Orange	TBD
+G60	Green	2026-08-07	12:00 AM	White	TBD
+G60	White	2026-08-07	12:00 AM	Green	TBD
+G61	Beige	2026-08-14	12:00 AM	White	TBD
+G61	White	2026-08-14	12:00 AM	Beige	TBD
+G62	Red	2026-08-14	12:00 AM	Powder	TBD
+G62	Powder	2026-08-14	12:00 AM	Red	TBD
+G63	Black	2026-08-14	12:00 AM	Yellow	TBD
+G63	Yellow	2026-08-14	12:00 AM	Black	TBD
+G64	Royal	2026-08-14	12:00 AM	Green	TBD
+G64	Green	2026-08-14	12:00 AM	Royal	TBD
+G65	Pink	2026-08-14	12:00 AM	Orange	TBD
+G65	Orange	2026-08-14	12:00 AM	Pink	TBD
+G66	Gray	2026-08-14	12:00 AM	Purple	TBD
+G66	Purple	2026-08-14	12:00 AM	Gray	TBD
+G67	White	2026-08-21	12:00 AM	Purple	TBD
+G67	Purple	2026-08-21	12:00 AM	White	TBD
+G68	Green	2026-08-21	12:00 AM	Gray	TBD
+G68	Gray	2026-08-21	12:00 AM	Green	TBD
+G69	Orange	2026-08-21	12:00 AM	Royal	TBD
+G69	Royal	2026-08-21	12:00 AM	Orange	TBD
+G70	Black	2026-08-21	12:00 AM	Red	TBD
+G70	Red	2026-08-21	12:00 AM	Black	TBD
+G71	Yellow	2026-08-21	12:00 AM	Pink	TBD
+G71	Pink	2026-08-21	12:00 AM	Yellow	TBD
+G72	Beige	2026-08-21	12:00 AM	Powder	TBD
+G72	Powder	2026-08-21	12:00 AM	Beige	TBD
+G73	Black	2026-08-28	12:00 AM	Gray	TBD
+G73	Gray	2026-08-28	12:00 AM	Black	TBD
+G74	Orange	2026-08-28	12:00 AM	Red	TBD
+G74	Red	2026-08-28	12:00 AM	Orange	TBD
+G75	Royal	2026-08-28	12:00 AM	Pink	TBD
+G75	Pink	2026-08-28	12:00 AM	Royal	TBD
+G76	White	2026-08-28	12:00 AM	Green	TBD
+G76	Green	2026-08-28	12:00 AM	White	TBD
+G77	Powder	2026-08-28	12:00 AM	Yellow	TBD
+G77	Yellow	2026-08-28	12:00 AM	Powder	TBD
+G78	Beige	2026-08-28	12:00 AM	Purple	TBD
+G78	Purple	2026-08-28	12:00 AM	Beige	TBD
