@@ -9,41 +9,22 @@ URL = "https://southshoreadultsoccer.com/schedule-union-point-weymouth/"
 YOUR_TEAM_KEYWORD = "gray"
 YEAR = 2026
 
-# Real America/New_York timezone (correct fix)
 ET = ZoneInfo("America/New_York")
-
-WEEKDAYS = {
-    "monday","tuesday","wednesday","thursday",
-    "friday","saturday","sunday"
-}
 
 def fetch_html(url):
     r = requests.get(url, timeout=10)
     r.raise_for_status()
     return r.text
 
+
 def parse_schedule(html):
     soup = BeautifulSoup(html, "html.parser")
 
-    # The schedule is inside a single big <table>
     table = soup.find("table")
     if not table:
         raise ValueError("No schedule table found")
 
     games = []
-
-    # Each date block is a group of 4 rows:
-    # Row 1: date + matchups (multiple columns)
-    # Row 2: weekday + fields (multiple columns)
-    # Row 3: times (multiple columns)
-    # Row 4: refs (multiple columns)
-    #
-    # Example:
-    # <tr> 5/29 | red vs white | orange vs beige | ... </tr>
-    # <tr> week 1 | field 2 | field 3 | ... </tr>
-    # <tr> 8:15 | 8:15 | 10:00 | ... </tr>
-    # <tr> ref – matt | ref – rob | ... </tr>
-
     rows = table.find_all("tr")
 
     i = 0
@@ -56,17 +37,17 @@ def parse_schedule(html):
         # Detect date row: first cell is mm/dd
         if re.match(r"^\d{1,2}/\d{1,2}$", cells[0]):
             date_str = cells[0]
-            matchups = cells[1:]  # columns 1..N
+            matchups = cells[1:]
 
-            # Next row: fields
+            # Fields row
             fields_row = rows[i+1]
             fields = [c.get_text(strip=True) for c in fields_row.find_all("td")][1:]
 
-            # Next row: times
+            # Times row
             times_row = rows[i+2]
             raw_times = [c.get_text(strip=True) for c in times_row.find_all("td")][1:]
 
-            # Next row: refs
+            # Refs row
             refs_row = rows[i+3]
             refs = [c.get_text(strip=True) for c in refs_row.find_all("td")][1:]
 
@@ -82,21 +63,35 @@ def parse_schedule(html):
                 ref = refs[col] if col < len(refs) else "TBD"
                 raw_time = raw_times[col] if col < len(raw_times) else None
 
-                # Normalize time formats
-                time_clean = raw_time.lower().replace("pm", " pm").replace("am", " am")
+                # -------------------------------
+                # NORMALIZE ALL TIMES TO PM
+                # -------------------------------
+                time_clean = (raw_time or "").lower().strip()
 
-                # Try multiple formats
+                # Remove am/pm markers entirely
+                time_clean = time_clean.replace("pm", "").replace("am", "").strip()
+
+                # Remove spaces: "8 pm" → "8", "8:15 pm" → "8:15"
+                time_clean = time_clean.replace(" ", "")
+
+                # Try parsing formats
                 dt = None
-                for fmt in ["%I:%M %p", "%I:%M", "%I %p"]:
+                for fmt in ["%I:%M", "%I"]:
                     try:
-                        dt = datetime.strptime(f"{YEAR} {date_str} {time_clean}", f"%Y %m/%d {fmt}")
+                        dt = datetime.strptime(
+                            f"{YEAR} {date_str} {time_clean} PM",
+                            f"%Y %m/%d {fmt} %p"
+                        )
                         break
                     except:
                         continue
 
-                # If still no time → leave as None (TBD)
+                # If still no time, fallback to a reasonable PM time
                 if dt is None:
-                    dt = datetime.strptime(f"{YEAR} {date_str} 00:00", "%Y %m/%d %H:%M")
+                    dt = datetime.strptime(
+                        f"{YEAR} {date_str} 08:00 PM",
+                        "%Y %m/%d %I:%M %p"
+                    )
 
                 dt = dt.replace(tzinfo=ET)
 
@@ -125,6 +120,7 @@ def filter_for_team(games, keyword):
         if keyword in g["home"].lower() or keyword in g["away"].lower()
     ]
 
+
 def create_ics(games, filename):
     cal = Calendar()
 
@@ -134,14 +130,11 @@ def create_ics(games, filename):
         title = f"{g['home'].title()} vs {g['away'].title()}"
         event.name = f"Adult Soccer Game: {title}"
 
-        # Use timezone-aware datetimes (zoneinfo)
         event.begin = g["datetime"]
         event.end = g["datetime"] + timedelta(minutes=90)
 
-        # FIXED: Always use the full address as the location
         event.location = "170 Memorial Grove Ave, Weymouth, MA 02190"
 
-        # Notes now include the field number instead of location
         ref_clean = g["ref"].replace("ref –", "").strip().title() if g["ref"] else "TBD"
         field_clean = g["field"].title() if g["field"] else "TBD"
 
@@ -156,14 +149,7 @@ def create_ics(games, filename):
         f.writelines(cal)
 
 
-
 def build_team_game_rows(games):
-    """
-    Sorts games chronologically, assigns game_id in true date order,
-    and expands each game into two rows (one per team).
-    """
-
-    # Sort by datetime
     games_sorted = sorted(games, key=lambda g: g["datetime"])
 
     rows = []
@@ -176,7 +162,6 @@ def build_team_game_rows(games):
         time_str = g["datetime"].strftime("%I:%M %p")
         field_clean = g["field"].title() if g["field"] else "TBD"
 
-        # Home team row
         rows.append({
             "game_id": game_id,
             "team_id": g["home"].title(),
@@ -186,7 +171,6 @@ def build_team_game_rows(games):
             "field": field_clean
         })
 
-        # Away team row
         rows.append({
             "game_id": game_id,
             "team_id": g["away"].title(),
@@ -201,7 +185,6 @@ def build_team_game_rows(games):
     return rows
 
 
-
 def write_team_games_file(rows, filename="all_team_games.tsv"):
     with open(filename, "w") as f:
         f.write("game_id\tteam_id\tdate\ttime\topponent\tfield\n")
@@ -212,19 +195,14 @@ def write_team_games_file(rows, filename="all_team_games.tsv"):
             )
 
 
-
 def extract_all_team_keywords(games):
-    """
-    Returns a sorted list of unique team keywords (colors).
-    Example: ['gray', 'purple', 'navy', 'yellow']
-    """
     keywords = set()
 
     for g in games:
         for side in (g["home"], g["away"]):
             parts = side.lower().split()
             for p in parts:
-                if p.isalpha():   # keep simple words only
+                if p.isalpha():
                     keywords.add(p)
 
     return sorted(keywords)
@@ -234,14 +212,11 @@ def main():
     html = fetch_html(URL)
     games = parse_schedule(html)
 
-    # Identify all team keywords (colors)
     all_keywords = extract_all_team_keywords(games)
     print("Detected team keywords:", all_keywords)
 
-    # Build ICS for each team
     for keyword in all_keywords:
         team_games = filter_for_team(games, keyword)
-
         if not team_games:
             continue
 
@@ -249,20 +224,16 @@ def main():
         create_ics(team_games, filename)
         print(f"Created {filename} with {len(team_games)} games.")
 
-    # Also produce teams.json for reference
     import json
     with open("teams.json", "w") as f:
         json.dump(all_keywords, f, indent=2)
 
     print("All team schedules generated.")
-    
-        # Build the full team-centric schedule file
+
     team_rows = build_team_game_rows(games)
     write_team_games_file(team_rows)
     print(f"Wrote {len(team_rows)} team-game rows to all_team_games.tsv")
 
 
-
 if __name__ == "__main__":
     main()
-
