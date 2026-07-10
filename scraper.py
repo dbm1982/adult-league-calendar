@@ -24,80 +24,85 @@ def fetch_html(url):
 
 def parse_schedule(html):
     soup = BeautifulSoup(html, "html.parser")
-    lines = [l.strip() for l in soup.get_text("\n").split("\n")]
-    lines = [l for l in lines if l]
+
+    # The schedule is inside a single big <table>
+    table = soup.find("table")
+    if not table:
+        raise ValueError("No schedule table found")
 
     games = []
+
+    # Each date block is a group of 4 rows:
+    # Row 1: date + matchups (multiple columns)
+    # Row 2: weekday + fields (multiple columns)
+    # Row 3: times (multiple columns)
+    # Row 4: refs (multiple columns)
+    #
+    # Example:
+    # <tr> 5/29 | red vs white | orange vs beige | ... </tr>
+    # <tr> week 1 | field 2 | field 3 | ... </tr>
+    # <tr> 8:15 | 8:15 | 10:00 | ... </tr>
+    # <tr> ref – matt | ref – rob | ... </tr>
+
+    rows = table.find_all("tr")
+
     i = 0
-
-    date_pattern = re.compile(r"^\d{1,2}/\d{1,2}$")
-    time_pattern = re.compile(r"^\d{1,2}:\d{2}$")
-
-    while i < len(lines):
-        line = lines[i]
-
-        if date_pattern.match(line):
-            current_date = line
+    while i < len(rows):
+        cells = [c.get_text(strip=True) for c in rows[i].find_all("td")]
+        if not cells:
             i += 1
+            continue
 
-            # Matchups
-            matchups = []
-            while i < len(lines) and "vs" in lines[i].lower():
-                matchups.append(lines[i])
-                i += 1
+        # Detect date row: first cell is mm/dd
+        if re.match(r"^\d{1,2}/\d{1,2}$", cells[0]):
+            date_str = cells[0]
+            matchups = cells[1:]  # columns 1..N
 
-            num_games = len(matchups)
-            if num_games == 0:
-                continue
+            # Next row: fields
+            fields_row = rows[i+1]
+            fields = [c.get_text(strip=True) for c in fields_row.find_all("td")][1:]
 
-            # Skip weekday
-            while i < len(lines) and lines[i].lower() in WEEKDAYS:
-                i += 1
+            # Next row: times
+            times_row = rows[i+2]
+            raw_times = [c.get_text(strip=True) for c in times_row.find_all("td")][1:]
 
-            # Fields
-            fields = []
-            while i < len(lines) and lines[i].lower().startswith("field"):
-                fields.append(lines[i])
-                i += 1
+            # Next row: refs
+            refs_row = rows[i+3]
+            refs = [c.get_text(strip=True) for c in refs_row.find_all("td")][1:]
 
-            # Times
-            times = []
-            while i < len(lines) and time_pattern.match(lines[i]):
-                times.append(lines[i])
-                i += 1
-
-            # Refs
-            refs = []
-            while i < len(lines) and lines[i].lower().startswith("ref"):
-                refs.append(lines[i])
-                i += 1
-
-            # Build games
-            for idx in range(num_games):
-                matchup = matchups[idx]
-                field = fields[idx] if idx < len(fields) else None
-                time = times[idx] if idx < len(times) else None
-                ref = refs[idx] if idx < len(refs) else None
+            # Parse each column as a separate game
+            for col in range(len(matchups)):
+                matchup = matchups[col]
+                if "vs" not in matchup.lower():
+                    continue
 
                 home, away = [t.strip() for t in matchup.split("vs", 1)]
 
-                if time:
-                    dt = datetime.strptime(
-                        f"{YEAR} {current_date} {time} PM",
-                        "%Y %m/%d %I:%M %p"
-                    )
-                else:
-                    dt = datetime.strptime(
-                        f"{YEAR} {current_date} 00:00",
-                        "%Y %m/%d %H:%M"
-                    )
+                field = fields[col] if col < len(fields) else "TBD"
+                ref = refs[col] if col < len(refs) else "TBD"
+                raw_time = raw_times[col] if col < len(raw_times) else None
 
-                # Attach REAL America/New_York timezone
+                # Normalize time formats
+                time_clean = raw_time.lower().replace("pm", " pm").replace("am", " am")
+
+                # Try multiple formats
+                dt = None
+                for fmt in ["%I:%M %p", "%I:%M", "%I %p"]:
+                    try:
+                        dt = datetime.strptime(f"{YEAR} {date_str} {time_clean}", f"%Y %m/%d {fmt}")
+                        break
+                    except:
+                        continue
+
+                # If still no time → leave as None (TBD)
+                if dt is None:
+                    dt = datetime.strptime(f"{YEAR} {date_str} 00:00", "%Y %m/%d %H:%M")
+
                 dt = dt.replace(tzinfo=ET)
 
                 games.append({
-                    "date": current_date,
-                    "time": time,
+                    "date": date_str,
+                    "time": raw_time,
                     "datetime": dt,
                     "field": field,
                     "ref": ref,
@@ -105,11 +110,13 @@ def parse_schedule(html):
                     "away": away
                 })
 
+            i += 4
             continue
 
         i += 1
 
     return games
+
 
 def filter_for_team(games, keyword):
     keyword = keyword.lower()
