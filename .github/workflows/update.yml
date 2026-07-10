@@ -26,13 +26,13 @@ jobs:
         run: python scraper.py
         working-directory: ${{ github.workspace }}
 
-
       - name: Commit results
         run: |
-          git add *.ics teams.json all_team_games.tsv
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add *.ics teams.json
+
+          # Stage ALL updated files, including all_team_games.tsv
+          git add *.ics teams.json all_team_games.tsv
+
           git commit -m "Auto-update all team schedules" || echo "No changes"
           git push
-
