@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 import json
 
 URL = "https://southshoreadultsoccer.com/schedule-union-point-weymouth/"
-YEAR = 2026
+YEAR = datetime.now().year
 
 ET = ZoneInfo("America/New_York")
 
