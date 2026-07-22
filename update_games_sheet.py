@@ -50,7 +50,7 @@ with open(
 
     lines = f.readlines()
 
-for line in lines[1:]:  # skip header
+for line in lines[1:]:
 
     parts = line.strip().split("\t")
 
@@ -60,10 +60,22 @@ for line in lines[1:]:  # skip header
     rows.append(parts)
 
 # --------------------------------------------------
+# SAFETY CHECK
+# --------------------------------------------------
+
+if len(rows) == 0:
+
+    raise Exception(
+        "No games found in all_team_games.tsv - refusing to overwrite Games sheet."
+    )
+
+# --------------------------------------------------
 # REBUILD GAMES TAB
 # --------------------------------------------------
 
-sheet.clear()
+sheet.batch_clear(
+    ["A:F"]
+)
 
 sheet.update(
     "A1:F1",
@@ -77,12 +89,10 @@ sheet.update(
     ]]
 )
 
-if rows:
-
-    sheet.update(
-        f"A2:F{len(rows)+1}",
-        rows
-    )
+sheet.update(
+    f"A2:F{len(rows)+1}",
+    rows
+)
 
 print(
     f"Updated Games sheet with {len(rows)} rows."
