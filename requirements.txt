@@ -2,3 +2,5 @@ requests
 beautifulsoup4
 ics
 pytz
+gspread
+google-auth
