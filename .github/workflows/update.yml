@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -26,12 +27,18 @@ jobs:
         run: python scraper.py
         working-directory: ${{ github.workspace }}
 
+      - name: Update Games Sheet
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: python update_games_sheet.py
+        working-directory: ${{ github.workspace }}
+
       - name: Commit results
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
 
-          # Stage ALL updated files, including all_team_games.tsv
+          # Stage all generated artifacts
           git add *.ics teams.json all_team_games.tsv
 
           git commit -m "Auto-update all team schedules" || echo "No changes"
