@@ -57,7 +57,16 @@ def parse_schedule(html):
             if "vs" not in matchup.lower().replace(".", "").replace(" ", ""):
                 continue
 
-            home, away = [x.strip() for x in matchup.replace("vs", "vs").split("vs")]
+            home_raw, away_raw = [x.strip() for x in matchup.split("vs")]
+
+            NORMALIZE = {
+                "grey": "gray",
+                "biege": "beige",
+            }
+            
+            home = NORMALIZE.get(home_raw.lower(), home_raw.lower())
+            away = NORMALIZE.get(away_raw.lower(), away_raw.lower())
+            
 
             raw_time = t[col].strip()
             time_clean = raw_time.lower().replace("pm", "").replace("am", "").strip()
