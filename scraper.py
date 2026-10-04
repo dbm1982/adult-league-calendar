@@ -25,132 +25,116 @@ def parse_schedule(html):
     if not table:
         raise ValueError("No schedule table found")
 
-    games = []
     rows = table.find_all("tr")
+    games = []
 
-    i = 0
+    # State machine
+    current_date = None
+    matchups = None
+    fields = None
+    times = None
+    refs = None
 
-    while i < len(rows):
+    def flush_block():
+        """Build game objects when all four components exist."""
+        nonlocal games, current_date, matchups, fields, times, refs
 
-        cells = [
-            c.get_text(strip=True)
-            for c in rows[i].find_all("td")
-        ]
+        if not (current_date and matchups):
+            return
 
-        if not cells:
-            i += 1
-            continue
+        # Normalize lists to same length
+        max_len = max(len(matchups), len(fields), len(times), len(refs))
+        def pad(lst):
+            return lst + ["TBD"] * (max_len - len(lst))
 
-        if re.match(r"^\d{1,2}/\d{1,2}$", cells[0]):
+        m = pad(matchups)
+        f = pad(fields)
+        t = pad(times)
+        r = pad(refs)
 
-            date_str = cells[0]
-            matchups = cells[1:]
+        for col in range(max_len):
+            matchup = m[col]
+            if "vs" not in matchup.lower().replace(".", "").replace(" ", ""):
+                continue
 
-            fields_row = rows[i + 1]
-            fields = [
-                c.get_text(strip=True)
-                for c in fields_row.find_all("td")
-            ][1:]
+            home, away = [x.strip() for x in matchup.replace("vs", "vs").split("vs")]
 
-            times_row = rows[i + 2]
-            raw_times = [
-                c.get_text(strip=True)
-                for c in times_row.find_all("td")
-            ][1:]
+            raw_time = t[col].strip()
+            time_clean = raw_time.lower().replace("pm", "").replace("am", "").strip()
+            time_clean = time_clean.replace(" ", "")
 
-            refs_row = rows[i + 3]
-            refs = [
-                c.get_text(strip=True)
-                for c in refs_row.find_all("td")
-            ][1:]
-
-            for col in range(len(matchups)):
-
-                matchup = matchups[col]
-
-                if "vs" not in matchup.lower():
+            dt = None
+            for fmt in ["%I:%M", "%I"]:
+                try:
+                    dt = datetime.strptime(
+                        f"{YEAR} {current_date} {time_clean} PM",
+                        f"%Y %m/%d {fmt} %p"
+                    )
+                    break
+                except:
                     continue
 
-                home, away = [
-                    t.strip()
-                    for t in matchup.split("vs", 1)
-                ]
-
-                field = (
-                    fields[col]
-                    if col < len(fields)
-                    else "TBD"
+            if dt is None:
+                dt = datetime.strptime(
+                    f"{YEAR} {current_date} 08:00 PM",
+                    "%Y %m/%d %I:%M %p"
                 )
 
-                ref = (
-                    refs[col]
-                    if col < len(refs)
-                    else "TBD"
-                )
+            dt = dt.replace(tzinfo=ET)
 
-                raw_time = (
-                    raw_times[col]
-                    if col < len(raw_times)
-                    else None
-                )
+            games.append({
+                "date": current_date,
+                "time": raw_time,
+                "datetime": dt,
+                "field": f[col],
+                "ref": r[col],
+                "home": home,
+                "away": away
+            })
 
-                time_clean = (
-                    raw_time or ""
-                ).lower().strip()
+        # Reset state
+        current_date = None
+        matchups = None
+        fields = None
+        times = None
+        refs = None
 
-                time_clean = (
-                    time_clean
-                    .replace("pm", "")
-                    .replace("am", "")
-                    .strip()
-                )
-
-                time_clean = time_clean.replace(
-                    " ",
-                    ""
-                )
-
-                dt = None
-
-                for fmt in ["%I:%M", "%I"]:
-
-                    try:
-
-                        dt = datetime.strptime(
-                            f"{YEAR} {date_str} {time_clean} PM",
-                            f"%Y %m/%d {fmt} %p"
-                        )
-
-                        break
-
-                    except:
-                        continue
-
-                if dt is None:
-
-                    dt = datetime.strptime(
-                        f"{YEAR} {date_str} 08:00 PM",
-                        "%Y %m/%d %I:%M %p"
-                    )
-
-                dt = dt.replace(
-                    tzinfo=ET
-                )
-
-                games.append({
-                    "date": date_str,
-                    "time": raw_time,
-                    "datetime": dt,
-                    "field": field,
-                    "ref": ref,
-                    "home": home,
-                    "away": away
-                })
-
-            i += 4
+    # Iterate through rows
+    for row in rows:
+        cells = [c.get_text(strip=True) for c in row.find_all("td")]
+        if not cells:
             continue
 
-        i += 1
+        # DATE ROW
+        if re.match(r"^\d{1,2}/\d{1,2}", cells[0]):
+            flush_block()
+            current_date = cells[0]
+            matchups = cells[1:]
+            fields = []
+            times = []
+            refs = []
+            continue
+
+        # FIELD ROW (contains "field" in any cell)
+        if any("field" in c.lower() for c in cells):
+            fields = cells[1:]
+            continue
+
+        # TIME ROW (contains times like 5:30, 7:15, 10:00)
+        if any(re.match(r"^\d{1,2}:\d{2}", c) for c in cells):
+            times = cells[1:]
+            continue
+
+        # REF ROW (contains "ref")
+        if any("ref" in c.lower() for c in cells):
+            refs = cells[1:]
+            continue
+
+        # IGNORE metadata rows like "week 5", "monday", etc.
+        continue
+
+    # Flush last block
+    flush_block()
 
     return games
 
