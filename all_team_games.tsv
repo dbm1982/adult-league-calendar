@@ -65,10 +65,10 @@ G32	Royal	2026-10-16	08:15 PM	Red	Field 3
 G32	Red	2026-10-16	08:15 PM	Royal	Field 3
 G33	Purple	2026-10-16	08:45 PM	Green	Field 2
 G33	Green	2026-10-16	08:45 PM	Purple	Field 2
-G34	Orange	2026-10-16	10:00 PM	White	Field 1
-G34	White	2026-10-16	10:00 PM	Orange	Field 1
-G35	Yellow	2026-10-16	10:00 PM	Gray	Field 3
-G35	Gray	2026-10-16	10:00 PM	Yellow	Field 3
+G34	Yellow	2026-10-16	10:00 PM	Gray	Field 1
+G34	Gray	2026-10-16	10:00 PM	Yellow	Field 1
+G35	White	2026-10-16	10:00 PM	Orange	Field 3
+G35	Orange	2026-10-16	10:00 PM	White	Field 3
 G36	Powder	2026-10-23	06:30 PM	Yellow	Field 2
 G36	Yellow	2026-10-23	06:30 PM	Powder	Field 2
 G37	Purple	2026-10-23	08:15 PM	Orange	Field 3
